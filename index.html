@@ -80,7 +80,7 @@
         <div class="table-scroll">
         <table>
           <thead>
-            <tr><th>ছবি</th><th>পণ্য</th><th>ক্রেতা</th><th>ফোন</th><th>ঠিকানা</th><th>পরিমাণ</th><th>পণ্য মূল্য</th><th>ডেলিভারি</th><th>সর্বমোট</th><th>পেমেন্ট</th><th>অবস্থা</th><th></th><th></th></tr>
+            <tr><th>ছবি</th><th>পণ্য</th><th>ক্রেতা</th><th>ফোন</th><th>ঠিকানা</th><th>পরিমাণ</th><th>পণ্য মূল্য</th><th>ডেলিভারি</th><th>সর্বমোট</th><th>অবস্থা</th><th></th><th></th></tr>
           </thead>
           <tbody id="ordersBody"></tbody>
         </table>
@@ -97,9 +97,6 @@
         <input type="text" id="pName" placeholder="যেমন: শার্ট">
         <label>মূল্য (৳)</label>
         <input type="number" id="pPrice" placeholder="৫০০">
-        <label>অফার মূল্য (৳) — ঐচ্ছিক</label>
-        <input type="number" id="pOffer" placeholder="যেমন: ৪৫০ (খালি রাখলে অফার দেখাবে না)">
-        <p style="font-size:12px;color:#777;margin-top:4px;">অফার মূল্য দিলে সাইটে আসল মূল্য কেটে দেখাবে ও কাস্টমার অফার মূল্যে কিনবে। অফার মূল্য আসল মূল্যের চেয়ে কম হতে হবে।</p>
         <label>ক্যাটাগরি</label>
         <select id="pCategory">
           <option value="">— ক্যাটাগরি নির্বাচন করুন (ঐচ্ছিক) —</option>
@@ -130,13 +127,6 @@
           <input type="checkbox" id="pMirror" style="width:auto;margin:0;">
           <span>আয়না সেট (প্রতি সেট = ১টা আয়না হিসেবে Order Manager-এ যাবে)</span>
         </label>
-        <label>সাইজ (ঐচ্ছিক) — শার্ট / টি-শার্ট / পাঞ্জাবির জন্য। কমা দিয়ে লিখুন; খালি রাখলে সাইজ বাছাই দেখাবে না</label>
-        <input type="text" id="pSizes" placeholder="যেমন: M, L, XL, XXL">
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">
-          <button type="button" class="del-btn" style="background:#2d2e83;" onclick="document.getElementById('pSizes').value='S, M, L, XL, XXL'">শার্ট / টি-শার্ট (S–XXL)</button>
-          <button type="button" class="del-btn" style="background:#2d2e83;" onclick="document.getElementById('pSizes').value='38, 40, 42, 44, 46'">পাঞ্জাবি (৩৮–৪৬)</button>
-          <button type="button" class="del-btn" style="background:#888;" onclick="document.getElementById('pSizes').value=''">সাইজ নেই</button>
-        </div>
         <label>পণ্যের ছবি (একাধিক ছবি নির্বাচন করা যাবে, একটার পর একটাও যোগ করা যাবে)</label>
         <input type="file" id="pImageFile" accept="image/*" multiple onchange="previewProductImage(event)">
         <div id="pImagePreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;"></div>
@@ -252,36 +242,6 @@
         <input type="number" id="deliveryExtraInput" value="20" min="0">
         <button class="primary" onclick="saveDelivery()">সেভ করুন</button>
       </div>
-
-      <div class="box">
-        <h2>📢 নোটিশ</h2>
-        <p style="font-size:13px;color:#666;margin-bottom:10px;line-height:1.7;">সাইটের ওপরের কালো স্ক্রলিং স্ট্রিপ ও ব্যানারের নিচের নোটিশ বারের লেখা। ঘর খালি রাখলে ওই অংশ দেখাবে না।</p>
-        <label>স্ক্রলিং স্ট্রিপের লেখা</label>
-        <input type="text" id="noticeTicker" placeholder="যেমন: 🚚 সারা বাংলাদেশে হোম ডেলিভারি • ✨ হাতে তৈরি ক্রাফট">
-        <label>নোটিশ বার (ব্যানারের নিচে)</label>
-        <input type="text" id="noticeAlert" placeholder="যেমন: 🔥 ঈদ সেল চলছে! আজ রাত ১২টা পর্যন্ত বিশেষ ছাড়">
-        <button class="primary" onclick="saveNotice()">সেভ করুন</button>
-      </div>
-
-      <div class="box">
-        <h2>💳 পেমেন্ট (ক্যাশ অন ডেলিভারি ও বিকাশ অগ্রিম)</h2>
-        <p style="font-size:13px;color:#666;margin-bottom:10px;line-height:1.7;">বিকাশ চালু করলে ক্রেতা চেকআউটে নিজে বাছতে পারবে: ক্যাশ অন ডেলিভারি, অথবা আগে শুধু ডেলিভারি চার্জ বিকাশে, অথবা পুরো টাকা বিকাশে। অগ্রিম দিলে TrxID দিতে হয়, আপনি অর্ডার তালিকায় বিকাশে মিলিয়ে "বিকাশে মিলেছে" টিক দেবেন। বিকাশ চালু না থাকলে সাইট আগের মতো ক্যাশ অন ডেলিভারিতে চলবে।</p>
-        <label style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="payEnabled" style="width:auto;"> বিকাশ পেমেন্ট চালু করুন</label>
-        <label>বিকাশ নম্বর (যেখানে টাকা নেবেন)</label>
-        <input type="text" id="payNumberInput" placeholder="01XXXXXXXXX">
-        <label>টাকা পাঠানোর ধরন</label>
-        <select id="payTypeInput" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;">
-          <option value="Send Money">Send Money (পার্সোনাল)</option>
-          <option value="Payment">Payment (মার্চেন্ট)</option>
-        </select>
-        <label style="margin-top:12px;"><b>ক্রেতা কোন কোন উপায় বাছতে পারবে</b></label>
-        <label style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="payAllowCod" style="width:auto;" checked> ক্যাশ অন ডেলিভারি (কোনো অগ্রিম ছাড়া)</label>
-        <label style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="payAllowDelivery" style="width:auto;" checked> আগে শুধু ডেলিভারি চার্জ, বাকি ডেলিভারিতে</label>
-        <label style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="payAllowFull" style="width:auto;" checked> পুরো টাকা আগে বিকাশে</label>
-        <label>ক্রেতার জন্য বাড়তি নির্দেশনা (ঐচ্ছিক)</label>
-        <input type="text" id="payNoteInput" placeholder="যেমন: রেফারেন্সে আপনার নাম লিখুন">
-        <button class="primary" onclick="savePayment()">সেভ করুন</button>
-      </div>
     </div>
   </div>
 </div>
@@ -309,8 +269,6 @@
   loadWhatsapp();
   loadLogo();
   loadDelivery();
-  loadPayment();
-  loadNotice();
 
   function showTab(tab, btnEl) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -375,14 +333,12 @@
   function resetProductForm() {
     document.getElementById('pName').value = '';
     document.getElementById('pPrice').value = '';
-    document.getElementById('pOffer').value = '';
     document.getElementById('pDesc').value = '';
     document.getElementById('pCategory').value = '';
     document.getElementById('pImageFile').value = '';
     document.getElementById('pBoro').value = '0';
     document.getElementById('pChoto').value = '0';
     document.getElementById('pMirror').checked = false;
-    document.getElementById('pSizes').value = '';
     document.getElementById('pDelFirst').value = '';
     document.getElementById('pDelExtra').value = '';
     pImagesData = [];
@@ -397,13 +353,11 @@
     if (!p) return;
     document.getElementById('pName').value = p.name || '';
     document.getElementById('pPrice').value = p.price || '';
-    document.getElementById('pOffer').value = (typeof p.offerPrice === 'number') ? p.offerPrice : '';
     document.getElementById('pDesc').value = p.description || '';
     document.getElementById('pCategory').value = p.category || '';
     document.getElementById('pBoro').value = p.boroCount || 0;
     document.getElementById('pChoto').value = p.chotoCount || 0;
     document.getElementById('pMirror').checked = !!p.isMirror;
-    document.getElementById('pSizes').value = (p.sizes && p.sizes.length) ? p.sizes.join(', ') : '';
     document.getElementById('pDelFirst').value = (typeof p.deliveryFirst === 'number') ? p.deliveryFirst : '';
     document.getElementById('pDelExtra').value = (typeof p.deliveryExtra === 'number') ? p.deliveryExtra : '';
     pImagesData = (p.images && p.images.length) ? [...p.images] : (p.image ? [p.image] : []);
@@ -419,36 +373,31 @@
   function addProduct() {
     const name = document.getElementById('pName').value.trim();
     const price = document.getElementById('pPrice').value.trim();
-    const offerRaw = document.getElementById('pOffer').value.trim();
     const desc = document.getElementById('pDesc').value.trim();
     const category = document.getElementById('pCategory').value;
     const boroCount = parseInt(document.getElementById('pBoro').value) || 0;
     const chotoCount = parseInt(document.getElementById('pChoto').value) || 0;
     const isMirror = document.getElementById('pMirror').checked;
-    const sizes = document.getElementById('pSizes').value.split(',').map(x => x.trim()).filter(Boolean);
     const delFirstRaw = document.getElementById('pDelFirst').value.trim();
     const delExtraRaw = document.getElementById('pDelExtra').value.trim();
 
     if (!name || !price) { alert('নাম ও মূল্য আবশ্যক।'); return; }
-    if (offerRaw !== '' && !(Number(offerRaw) > 0 && Number(offerRaw) < Number(price))) { alert('অফার মূল্য আসল মূল্যের চেয়ে কম হতে হবে, অথবা ঘর খালি রাখুন।'); return; }
     if ((delFirstRaw !== '' && !(Number(delFirstRaw) >= 0)) || (delExtraRaw !== '' && !(Number(delExtraRaw) >= 0))) { alert('ডেলিভারি চার্জে সঠিক সংখ্যা দিন (০ বা তার বেশি), অথবা ঘর খালি রাখুন।'); return; }
     if (!pImagesData.length) { alert('অন্তত একটা ছবি যোগ করুন।'); return; }
 
     const data = {
       name, price: Number(price), images: pImagesData, image: pImagesData[0] || '', description: desc,
-      category, boroCount, chotoCount, isMirror, sizes
+      category, boroCount, chotoCount, isMirror
     };
 
     if (editingProductId) {
       data.deliveryFirst = delFirstRaw === '' ? firebase.firestore.FieldValue.delete() : Number(delFirstRaw);
       data.deliveryExtra = delExtraRaw === '' ? firebase.firestore.FieldValue.delete() : Number(delExtraRaw);
-      data.offerPrice = offerRaw === '' ? firebase.firestore.FieldValue.delete() : Number(offerRaw);
       db.collection('products').doc(editingProductId).update(data)
         .then(() => { alert('পণ্য আপডেট হয়েছে!'); resetProductForm(); })
         .catch(err => alert('ত্রুটি: ' + err.message));
     } else {
       if (delFirstRaw !== '') data.deliveryFirst = Number(delFirstRaw);
-      if (offerRaw !== '') data.offerPrice = Number(offerRaw);
       if (delExtraRaw !== '') data.deliveryExtra = Number(delExtraRaw);
       data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
       db.collection('products').add(data)
@@ -564,7 +513,7 @@
         tr.innerHTML = `
           <td><img class="product-thumb" src="${thumb}"></td>
           <td>${p.name}</td>
-          <td>${(typeof p.offerPrice === 'number' && p.offerPrice < p.price) ? '<s style="color:#999">৳' + p.price + '</s> <b style="color:#c0392b">৳' + p.offerPrice + '</b>' : '৳' + p.price}</td>
+          <td>৳${p.price}</td>
           <td><button class="del-btn" style="background:#2d2e83;" onclick="editProduct('${doc.id}')">সম্পাদনা</button></td>
           <td><button class="del-btn" onclick="deleteProduct('${doc.id}')">মুছুন</button></td>`;
         body.appendChild(tr);
@@ -580,12 +529,6 @@
 
   let ordersCache = {};
 
-  function escA(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-
-  function toggleVerified(id, checked) {
-    db.collection('orders').doc(id).update({ advanceVerified: checked });
-  }
-
   function loadOrders() {
     db.collection('orders').orderBy('createdAt', 'desc').onSnapshot(snap => {
       const body = document.getElementById('ordersBody');
@@ -597,7 +540,7 @@
         const o = doc.data();
         ordersCache[doc.id] = o;
         const items = (o.items && o.items.length) ? o.items : [{ productName: o.productName, quantity: o.quantity, image: o.image }];
-        const productDisplay = items.map(it => `${escA(it.productName)}${it.size ? ' <b style="color:#c0392b">[সাইজ: ' + escA(it.size) + ']</b>' : ''} x${it.quantity}`).join('<br>');
+        const productDisplay = items.map(it => `${it.productName} x${it.quantity}`).join('<br>');
         const productTotal = (o.items && o.items.length)
           ? o.items.reduce((s, it) => s + it.price * it.quantity, 0)
           : o.price * o.quantity;
@@ -607,14 +550,13 @@
         tr.innerHTML = `
           <td>${thumbsHtml}</td>
           <td>${productDisplay}</td>
-          <td>${escA(o.customerName)}</td>
-          <td>${escA(o.customerPhone)}</td>
-          <td>${escA(o.customerAddress)}</td>
+          <td>${o.customerName}</td>
+          <td>${o.customerPhone}</td>
+          <td>${o.customerAddress}</td>
           <td>${o.quantity}</td>
           <td>৳${productTotal}</td>
           <td>৳${o.deliveryCharge != null ? o.deliveryCharge : '—'}</td>
           <td><strong>৳${o.totalAmount != null ? o.totalAmount : productTotal}</strong></td>
-          <td>${o.trxId ? `<div style="font-size:12px;line-height:1.7;min-width:150px;">${o.paymentMethod === 'advance_full' ? 'পুরো টাকা অগ্রিম' : 'ডেলিভারি চার্জ অগ্রিম'}: <b>৳${escA(o.advancePaid)}</b><br>TrxID: <b>${escA(o.trxId)}</b><br>নম্বর: ${escA(o.senderNumber)}<br>ডেলিভারিতে নেবেন: <b>৳${escA(o.dueOnDelivery)}</b><br><label style="cursor:pointer;"><input type="checkbox" style="width:auto;" ${o.advanceVerified ? 'checked' : ''} onchange="toggleVerified('${doc.id}', this.checked)"> বিকাশে মিলেছে</label></div>` : (o.paymentMethod === 'cod' ? `<div style="font-size:12px;line-height:1.7;">ক্যাশ অন ডেলিভারি<br>নেবেন: <b>৳${escA(o.dueOnDelivery)}</b></div>` : '<span style="color:#999;">—</span>')}</td>
           <td>
             <select onchange="updateStatus('${doc.id}', this.value)">
               <option value="pending" ${o.status==='pending'?'selected':''}>পেন্ডিং</option>
@@ -643,13 +585,12 @@
     const o = ordersCache[id];
     if (!o) return;
     const items = (o.items && o.items.length) ? o.items : [{ productName: o.productName, quantity: o.quantity, price: o.price, image: o.image }];
-    const itemLines = items.map(it => `- ${it.productName}${it.size ? ' [সাইজ: ' + it.size + ']' : ''} x${it.quantity} (৳${it.price})`).join('\n');
-    const payLine = o.trxId ? `\n${o.paymentMethod === 'advance_full' ? 'পুরো টাকা অগ্রিম' : 'অগ্রিম ডেলিভারি চার্জ'} (বিকাশ): ৳${o.advancePaid}, TrxID: ${o.trxId}${o.advanceVerified ? ' ✅' : ' (যাচাই বাকি)'}\nডেলিভারিতে নেবেন: ৳${o.dueOnDelivery}` : (o.paymentMethod === 'cod' ? `\nপেমেন্ট: ক্যাশ অন ডেলিভারি, নেবেন: ৳${o.dueOnDelivery}` : '');
+    const itemLines = items.map(it => `- ${it.productName} x${it.quantity} (৳${it.price})`).join('\n');
     const text =
 `🛍️ নতুন অর্ডার
 ${itemLines}
 ডেলিভারি চার্জ: ৳${o.deliveryCharge ?? '—'}
-সর্বমোট: ৳${o.totalAmount ?? '—'}${payLine}
+সর্বমোট: ৳${o.totalAmount ?? '—'}
 
 ক্রেতা: ${o.customerName}
 ফোন: ${o.customerPhone}
@@ -754,50 +695,6 @@ ${itemLines}
         if (doc.data().whatsapp) document.getElementById('whatsappInput').value = doc.data().whatsapp;
         if (doc.data().facebook) document.getElementById('facebookInput').value = doc.data().facebook;
       }
-    });
-  }
-
-  function saveNotice() {
-    db.collection('settings').doc('notice').set({
-      ticker: document.getElementById('noticeTicker').value.trim(),
-      alert: document.getElementById('noticeAlert').value.trim()
-    }).then(() => alert('সেভ হয়েছে!')).catch(err => alert('ত্রুটি: ' + err.message));
-  }
-
-  function loadNotice() {
-    db.collection('settings').doc('notice').get().then(doc => {
-      const d = doc.exists ? doc.data() : { ticker: '🚚 সারা বাংলাদেশে হোম ডেলিভারি  •  💵 ক্যাশ অন ডেলিভারি সুবিধা  •  ✨ হাতে তৈরি ক্রাফট ও আর্ট', alert: '' };
-      document.getElementById('noticeTicker').value = d.ticker || '';
-      document.getElementById('noticeAlert').value = d.alert || '';
-    });
-  }
-
-  function savePayment() {
-    const enabled = document.getElementById('payEnabled').checked;
-    const number = document.getElementById('payNumberInput').value.trim();
-    const type = document.getElementById('payTypeInput').value;
-    const note = document.getElementById('payNoteInput').value.trim();
-    if (enabled && !/^01[3-9]\d{8}$/.test(number)) { alert('সঠিক বিকাশ নম্বর দিন (১১ ডিজিট, যেমন 01XXXXXXXXX)।'); return; }
-    const allowCod = document.getElementById('payAllowCod').checked;
-    const allowDelivery = document.getElementById('payAllowDelivery').checked;
-    const allowFull = document.getElementById('payAllowFull').checked;
-    if (enabled && !allowCod && !allowDelivery && !allowFull) { alert('অন্তত একটা পেমেন্ট উপায় চালু রাখুন।'); return; }
-    db.collection('settings').doc('payment').set({ enabled, number, type, note, allowCod, allowDelivery, allowFull })
-      .then(() => alert('সেভ হয়েছে!'))
-      .catch(err => alert('ত্রুটি: ' + err.message));
-  }
-
-  function loadPayment() {
-    db.collection('settings').doc('payment').get().then(doc => {
-      if (!doc.exists) return;
-      const d = doc.data();
-      document.getElementById('payEnabled').checked = !!d.enabled;
-      document.getElementById('payNumberInput').value = d.number || '';
-      document.getElementById('payTypeInput').value = d.type || 'Send Money';
-      document.getElementById('payNoteInput').value = d.note || '';
-      document.getElementById('payAllowCod').checked = d.allowCod !== false;
-      document.getElementById('payAllowDelivery').checked = d.allowDelivery !== false;
-      document.getElementById('payAllowFull').checked = d.allowFull !== false;
     });
   }
 
