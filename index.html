@@ -4,61 +4,129 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Anabiya Craft & Art — অ্যাডমিন</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin:0; padding:0; }
+  :root {
+    --ink:#12302b; --primary:#0f6b62; --primary-dark:#0a4f48; --primary-light:#e3f1ee;
+    --marigold:#f5b301; --muted:#5d716d; --bg:#f2f6f5; --surface:#fff; --border:#d9e4e1; --danger:#d64545;
+    --shadow:0 1px 0 rgba(18,48,43,.04), 0 10px 24px -14px rgba(18,48,43,.28);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
   html, body { max-width:100%; overflow-x:hidden; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background:#f7f7fb; color:#222; }
-  header { background:#2d2e83; color:#fff; padding:14px 16px; display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center; }
-  header h1 { font-size:18px; }
-  header button { background:#c0392b; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; flex-shrink:0; }
-  .container { max-width:1000px; margin:0 auto; padding:16px; }
-  .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
-  .tab-btn { flex:1 1 auto; min-width:90px; padding:10px; border:none; background:#e0e0f0; border-radius:8px; cursor:pointer; font-size:13px; font-weight:bold; color:#2d2e83; }
-  .tab-btn.active { background:#2d2e83; color:#fff; }
+  body { font-family:'Anek Bangla','Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased; }
+  :focus-visible { outline:3px solid var(--marigold); outline-offset:2px; }
+
+  header { background:linear-gradient(120deg,var(--primary-dark),var(--primary)); color:#fff; padding:14px 18px; display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:50; box-shadow:0 6px 20px -10px rgba(10,79,72,.7); }
+  header h1 { font-size:18px; font-weight:800; letter-spacing:-.2px; }
+  header button { background:var(--danger); color:#fff; border:none; padding:8px 14px; border-radius:10px; cursor:pointer; flex-shrink:0; font-family:inherit; }
+  #onlineBadge { margin-top:0 !important; background:rgba(255,255,255,.16) !important; border:1px solid rgba(255,255,255,.28); }
+  .menu-btn { display:none; background:rgba(255,255,255,.16) !important; border:1px solid rgba(255,255,255,.3) !important; font-size:20px; padding:4px 12px !important; line-height:1.2; }
+
+  .container { display:grid; grid-template-columns:240px minmax(0,1fr); gap:18px; align-items:start; max-width:1280px; margin:0 auto; padding:16px; }
+  .main { min-width:0; }
+  .tabs { display:flex; flex-direction:column; gap:6px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow); position:sticky; top:84px; z-index:40; }
+  .tab-btn { width:100%; text-align:left; padding:12px 14px; border:none; background:transparent; border-radius:12px; cursor:pointer; font-family:inherit; font-size:14px; font-weight:700; color:var(--muted); white-space:nowrap; transition:background .15s,color .15s; }
+  .tab-btn:hover { background:var(--primary-light); color:var(--primary); }
+  .tab-btn.active { background:var(--primary); color:#fff; box-shadow:0 8px 16px -8px rgba(15,107,98,.8); }
+  .sb-overlay { display:none; }
   .tab-content { display:none; }
-  .tab-content.active { display:block; }
+  .tab-content.active { display:block; animation:tabIn .25s ease; }
+  @keyframes tabIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
 
-  .box { background:#fff; border-radius:10px; padding:16px; box-shadow:0 1px 4px rgba(0,0,0,0.08); margin-bottom:18px; max-width:100%; overflow-x:hidden; }
-  .box h2 { font-size:16px; margin-bottom:14px; }
-  label { display:block; font-size:13px; margin:10px 0 4px; }
-  input, textarea { width:100%; padding:9px; border:1px solid #ccc; border-radius:6px; font-size:14px; }
-  input[type="file"] { max-width:100%; }
-  button.primary { background:#2d2e83; color:#fff; border:none; padding:10px 16px; border-radius:6px; cursor:pointer; margin-top:14px; font-size:14px; }
-  button.primary:hover { background:#1f2060; }
+  .box { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:20px; box-shadow:var(--shadow); margin-bottom:18px; max-width:100%; overflow-x:hidden; }
+  .box h2 { font-size:17px; font-weight:800; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+  .box h2::before { content:''; width:5px; height:20px; border-radius:5px; background:var(--primary); flex-shrink:0; }
+  .box p { color:var(--muted); }
+  label { display:block; font-size:13px; font-weight:600; color:var(--ink); margin:12px 0 5px; }
+  input, textarea, select { font-family:inherit; }
+  input[type="text"], input[type="number"], input:not([type]), textarea, .box select { width:100%; padding:11px 12px; border:1.5px solid var(--border); border-radius:12px; font-size:14px; background:#fbfdfc; color:var(--ink); transition:border-color .15s, box-shadow .15s; }
+  input:focus, textarea:focus, .box select:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 4px var(--primary-light); background:#fff; }
+  input[type="file"] { max-width:100%; width:100%; padding:10px; border:1.5px dashed var(--border); border-radius:12px; background:#fbfdfc; font-size:13px; }
+  input[type="checkbox"] { accent-color:var(--primary); width:18px; height:18px; }
 
-  .table-scroll { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-  table { width:100%; min-width:640px; border-collapse:collapse; font-size:13px; }
-  th, td { text-align:left; padding:8px; border-bottom:1px solid #eee; white-space:nowrap; }
-  th { color:#555; font-size:12px; text-transform:uppercase; }
-  .badge { padding:3px 8px; border-radius:12px; font-size:11px; font-weight:bold; }
+  button.primary { background:var(--primary); color:#fff; border:none; padding:11px 20px; border-radius:12px; cursor:pointer; margin-top:16px; font-size:14px; font-weight:700; font-family:inherit; transition:background .15s, transform .15s; }
+  button.primary:hover { background:var(--primary-dark); transform:translateY(-1px); }
+
+  .table-scroll { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:12px; border:1px solid var(--border); }
+  table { width:100%; min-width:520px; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; padding:11px 10px; border-bottom:1px solid #edf2f1; white-space:nowrap; vertical-align:middle; }
+  th { color:var(--primary-dark); font-size:12px; font-weight:800; background:var(--primary-light); }
+  tbody tr:hover { background:#f7fbfa; }
+  tbody tr:last-child td { border-bottom:none; }
+  .badge { padding:3px 10px; border-radius:12px; font-size:11px; font-weight:bold; white-space:nowrap; }
   .badge.pending { background:#fff3cd; color:#856404; }
   .badge.done { background:#d4edda; color:#155724; }
-  select { padding:5px; border-radius:5px; border:1px solid #ccc; font-size:12px; }
-  .del-btn { background:#c0392b; color:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-size:12px; }
-  .product-thumb { width:40px; height:40px; object-fit:cover; border-radius:5px; }
-  .empty { text-align:center; padding:30px; color:#888; }
-  .preview { max-width:200px; max-height:150px; border-radius:8px; margin-top:10px; display:none; object-fit:cover; }
-  .banner-preview { width:100%; max-height:220px; object-fit:cover; border-radius:8px; margin-top:10px; display:none; }
-
+  .del-btn { background:var(--danger); color:#fff; border:none; padding:7px 12px; border-radius:9px; cursor:pointer; font-size:12px; font-weight:700; font-family:inherit; transition:opacity .15s, transform .15s; }
+  .del-btn:hover { opacity:.88; transform:translateY(-1px); }
+  .product-thumb { width:48px; height:48px; object-fit:cover; border-radius:10px; border:1px solid var(--border); }
+  .empty { text-align:center; padding:34px; color:var(--muted); }
+  .preview { max-width:200px; max-height:150px; border-radius:12px; margin-top:10px; display:none; object-fit:cover; }
+  .banner-preview { width:100%; max-height:220px; object-fit:cover; border-radius:14px; margin-top:10px; display:none; }
   #loginBox { max-width:340px; margin:80px auto; }
+
+  /* ---- অর্ডার কার্ড ---- */
+  .orders-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:14px; }
+  .order-card { border:1px solid var(--border); border-left:5px solid var(--marigold); border-radius:16px; padding:14px; background:#fff; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:12px; }
+  .order-card.done { border-left-color:#1f9d55; }
+  .oc-top { display:flex; align-items:flex-start; gap:10px; }
+  .oc-thumbs { display:flex; flex-wrap:wrap; gap:4px; max-width:112px; flex-shrink:0; }
+  .oc-thumbs .product-thumb { width:52px; height:52px; }
+  .oc-items { flex:1; font-size:14px; font-weight:700; line-height:1.6; min-width:0; word-break:break-word; }
+  .oc-cust { background:var(--primary-light); border-radius:12px; padding:10px 12px; font-size:13px; line-height:1.8; word-break:break-word; }
+  .oc-money { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+  .oc-money > div { background:#f6f9f8; border-radius:10px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center; font-size:13px; }
+  .oc-money span { color:var(--muted); }
+  .oc-money .total { grid-column:1 / -1; background:var(--primary); color:#fff; font-size:15px; }
+  .oc-money .total span { color:rgba(255,255,255,.8); }
+  .oc-pay { background:#fffaf0; border:1px dashed var(--marigold); border-radius:12px; padding:10px 12px; font-size:12.5px; line-height:1.8; word-break:break-word; }
+  .oc-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .oc-actions select, td select { width:auto; padding:7px 10px; border-radius:9px; border:1.5px solid var(--border); font-size:13px; background:#fff; }
+  .oc-actions .del-btn:last-child { margin-left:auto; }
+
+  .order-card.sm { cursor:pointer; gap:10px; transition:transform .15s, box-shadow .15s; }
+  .order-card.sm:hover { transform:translateY(-2px); box-shadow:0 14px 28px -14px rgba(18,48,43,.4); }
+  .oc-line { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13px; }
+  .oc-line .amt { font-weight:800; color:var(--primary); font-size:16px; }
+  .oc-hint { font-size:12px; color:var(--muted); }
+  .om-bg { display:none; position:fixed; inset:0; background:rgba(18,48,43,.55); z-index:200; align-items:center; justify-content:center; padding:12px; }
+  .om-bg.open { display:flex; }
+  .om-box { background:#fff; border-radius:20px; padding:18px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; position:relative; box-shadow:0 30px 60px -20px rgba(0,0,0,.5); animation:omIn .2s ease; }
+  @keyframes omIn { from { opacity:0; transform:translateY(14px) scale(.98); } to { opacity:1; transform:none; } }
+  .om-close { position:absolute; top:10px; right:10px; width:34px; height:34px; border-radius:50%; border:none; background:var(--primary-light); color:var(--primary-dark); font-size:16px; cursor:pointer; z-index:2; }
+  .om-box .oc-top { padding-right:40px; }
   /* ---- পরিসংখ্যান ---- */
-  .stat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
-  .stat { background:#f4f5fb; border-radius:10px; padding:14px; }
-  .stat .num { font-size:26px; font-weight:800; color:#2d2e83; }
-  .stat .lbl { font-size:12px; color:#666; margin-top:4px; }
-  .stat.live { background:#e7f8ee; }
+  .stat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
+  .stat { background:var(--primary-light); border-radius:16px; padding:16px; border:1px solid var(--border); }
+  .stat .num { font-size:28px; font-weight:800; color:var(--primary); }
+  .stat .lbl { font-size:12px; color:var(--muted); margin-top:4px; }
+  .stat.live { background:#e7f8ee; border-color:#bfe8cf; }
   .stat.live .num { color:#1f9d55; }
-  .day-row { display:flex; align-items:center; gap:8px; font-size:12px; margin:7px 0; }
-  .day-row .d { width:56px; color:#555; flex-shrink:0; }
-  .day-row .bar { flex:1; background:#eceef8; border-radius:6px; height:16px; overflow:hidden; }
-  .day-row .bar i { display:block; height:100%; background:#2d2e83; border-radius:6px; transition:width .4s; }
-  .day-row .n { width:96px; text-align:right; color:#333; flex-shrink:0; }
+  .day-row { display:flex; align-items:center; gap:8px; font-size:12px; margin:8px 0; }
+  .day-row .d { width:56px; color:var(--muted); flex-shrink:0; }
+  .day-row .bar { flex:1; background:var(--primary-light); border-radius:8px; height:16px; overflow:hidden; }
+  .day-row .bar i { display:block; height:100%; background:linear-gradient(90deg,var(--primary),#2aa597); border-radius:8px; transition:width .4s; }
+  .day-row .n { width:96px; text-align:right; color:var(--ink); flex-shrink:0; }
+
+  @media (max-width:860px) {
+    .menu-btn { display:inline-block; }
+    .container { grid-template-columns:1fr; padding:12px; }
+    .box { padding:16px; border-radius:18px; }
+    header h1 { font-size:16px; }
+    .tabs { position:fixed; top:0; left:0; bottom:0; width:250px; max-width:80vw; border-radius:0 20px 20px 0; padding:20px 12px; z-index:90; transform:translateX(-105%); transition:transform .25s ease; overflow-y:auto; }
+    body.sb-open .tabs { transform:none; box-shadow:0 0 40px rgba(0,0,0,.35); }
+    .sb-overlay { position:fixed; inset:0; background:rgba(18,48,43,.45); z-index:80; }
+    body.sb-open .sb-overlay { display:block; }
+    .orders-grid { grid-template-columns:1fr; }
+  }
 </style>
 </head>
 <body>
 
 <div id="adminScreen">
   <header>
+    <button type="button" class="menu-btn" id="menuBtn" onclick="toggleSidebar()" aria-label="মেনু">☰</button>
     <h1>🧵 Anabiya Craft & Art — অ্যাডমিন</h1>
     <span id="onlineBadge" style="display:inline-block;margin-top:6px;background:rgba(255,255,255,.18);padding:3px 11px;border-radius:999px;font-size:12px;font-weight:600;">🟢 এখন অনলাইনে: ০</span>
   </header>
@@ -73,18 +141,12 @@
       <button class="tab-btn" onclick="showTab('stats', this)">📊 পরিসংখ্যান</button>
     </div>
 
+    <div class="main">
     <!-- ORDERS TAB -->
     <div class="tab-content active" id="ordersTab">
       <div class="box">
         <h2>সকল অর্ডার</h2>
-        <div class="table-scroll">
-        <table>
-          <thead>
-            <tr><th>ছবি</th><th>পণ্য</th><th>ক্রেতা</th><th>ফোন</th><th>ঠিকানা</th><th>পরিমাণ</th><th>পণ্য মূল্য</th><th>ডেলিভারি</th><th>সর্বমোট</th><th>পেমেন্ট</th><th>অবস্থা</th><th></th><th></th></tr>
-          </thead>
-          <tbody id="ordersBody"></tbody>
-        </table>
-        </div>
+        <div class="orders-grid" id="ordersBody"></div>
         <div class="empty" id="ordersEmpty" style="display:none;">এখনো কোনো অর্ডার আসেনি।</div>
       </div>
     </div>
@@ -94,14 +156,13 @@
       <div class="box">
         <h2>নতুন পণ্য যোগ করুন</h2>
 
-        <div style="background:#f1f2ff;border:1px solid #d9daf5;border-radius:10px;padding:12px;margin-bottom:16px;">
+        <div style="background:#e3f1ee;border:1px solid #d9e4e1;border-radius:14px;padding:12px;margin-bottom:16px;">
           <label for="quickProductText" style="font-weight:700;margin-top:0;">⚡ একসঙ্গে পণ্যের তথ্য লিখুন</label>
-          <textarea id="quickProductText" rows="7" style="width:100%;padding:10px;border:1px solid #c9cbea;border-radius:8px;font-size:14px;line-height:1.7;" placeholder="নাম: সুপারি পাতার প্লেট&#10;মূল্য: ৫০০&#10;অফার: ৪৫০&#10;ক্যাটাগরি: Wall Decor&#10;বড়: ৫টি&#10;ছোট: ৩টি&#10;ডেলিভারি: ১৩০"></textarea>
+          <textarea id="quickProductText" rows="7" style="width:100%;padding:10px;border:1.5px solid #d9e4e1;border-radius:12px;font-size:14px;line-height:1.7;" placeholder="নাম: সুপারি পাতার প্লেট&#10;মূল্য: ৫০০&#10;অফার: ৪৫০&#10;ক্যাটাগরি: Wall Decor&#10;বড়: ৫টি&#10;ছোট: ৩টি&#10;ডেলিভারি: ১৩০"></textarea>
           <button type="button" class="primary" style="margin-top:9px;" onclick="autoFillProductFromText()">তথ্য Auto Fill করুন</button>
-          <p style="font-size:12px;color:#666;margin-top:7px;line-height:1.6;">তথ্য বসানোর পর নিচে ছবি আপলোড করুন, প্রয়োজনে বিবরণ দিন, তারপর নিজে Submit করুন। Auto Fill করলে পণ্য Save হবে না।</p>
+          <p style="font-size:12px;color:#666;margin-top:7px;line-height:1.6;">তথ্য বসানোর পর নিচে ছবি আপলোড করুন, প্রয়োজনে বিবরণ দিন, তারপর নিজে Submit করুন। Auto Fill করলে পণ্য Save হবে না।</p>
           <div id="quickFillMessage" role="status" style="font-size:13px;margin-top:6px;"></div>
         </div>
-
         <label>পণ্যের নাম</label>
         <input type="text" id="pName" placeholder="যেমন: শার্ট">
         <label>মূল্য (৳)</label>
@@ -142,8 +203,8 @@
         <label>সাইজ (ঐচ্ছিক) — শার্ট / টি-শার্ট / পাঞ্জাবির জন্য। কমা দিয়ে লিখুন; খালি রাখলে সাইজ বাছাই দেখাবে না</label>
         <input type="text" id="pSizes" placeholder="যেমন: M, L, XL, XXL">
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">
-          <button type="button" class="del-btn" style="background:#2d2e83;" onclick="document.getElementById('pSizes').value='S, M, L, XL, XXL'">শার্ট / টি-শার্ট (S–XXL)</button>
-          <button type="button" class="del-btn" style="background:#2d2e83;" onclick="document.getElementById('pSizes').value='38, 40, 42, 44, 46'">পাঞ্জাবি (৩৮–৪৬)</button>
+          <button type="button" class="del-btn" style="background:#0f6b62;" onclick="document.getElementById('pSizes').value='S, M, L, XL, XXL'">শার্ট / টি-শার্ট (S–XXL)</button>
+          <button type="button" class="del-btn" style="background:#0f6b62;" onclick="document.getElementById('pSizes').value='38, 40, 42, 44, 46'">পাঞ্জাবি (৩৮–৪৬)</button>
           <button type="button" class="del-btn" style="background:#888;" onclick="document.getElementById('pSizes').value=''">সাইজ নেই</button>
         </div>
         <label>পণ্যের ছবি (একাধিক ছবি নির্বাচন করা যাবে, একটার পর একটাও যোগ করা যাবে)</label>
@@ -292,8 +353,13 @@
         <button class="primary" onclick="savePayment()">সেভ করুন</button>
       </div>
     </div>
+    </div><!-- /main -->
   </div>
 </div>
+<div class="om-bg" id="orderModalBg" onclick="if(event.target===this)closeOrderModal()">
+  <div class="om-box"><button type="button" class="om-close" onclick="closeOrderModal()" aria-label="বন্ধ করুন">✕</button><div id="orderModalBody" style="display:flex;flex-direction:column;gap:12px;"></div></div>
+</div>
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar(false)"></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -405,7 +471,7 @@
       else if (['মূল্য', 'দাম', 'price', 'মূল দাম', 'আসল মূল্য'].includes(key)) parsed.price = toEnglishDigits(value).replace(/[^\d.]/g, '');
       else if (['অফার', 'অফার মূল্য', 'অফার দাম', 'offer', 'offer price'].includes(key)) parsed.offer = toEnglishDigits(value).replace(/[^\d.]/g, '');
       else if (['ক্যাটাগরি', 'category', 'বিভাগ'].includes(key)) parsed.category = value;
-      else if (['বড়', 'বড়', 'বড় প্লেট', 'বড় প্লেট', 'boro', 'large'].includes(key)) parsed.boro = toEnglishDigits(value).replace(/[^\d]/g, '');
+      else if (['বড়', 'বড়', 'বড় প্লেট', 'বড় প্লেট', 'boro', 'large'].includes(key)) parsed.boro = toEnglishDigits(value).replace(/[^\d]/g, '');
       else if (['ছোট', 'ছোট প্লেট', 'choto', 'small'].includes(key)) parsed.choto = toEnglishDigits(value).replace(/[^\d]/g, '');
       else if (['ডেলিভারি', 'ডেলিভারি চার্জ', 'delivery', 'delivery charge'].includes(key)) parsed.delivery = toEnglishDigits(value).replace(/[^\d.]/g, '');
       else if (['বিবরণ', 'বর্ণনা', 'description', 'details'].includes(key)) parsed.description = value;
@@ -428,7 +494,7 @@
       select.value = option.value;
       filled.push('ক্যাটাগরি');
     }
-    if (parsed.boro !== undefined && parsed.boro !== '') { document.getElementById('pBoro').value = parsed.boro; filled.push('বড়'); }
+    if (parsed.boro !== undefined && parsed.boro !== '') { document.getElementById('pBoro').value = parsed.boro; filled.push('বড়'); }
     if (parsed.choto !== undefined && parsed.choto !== '') { document.getElementById('pChoto').value = parsed.choto; filled.push('ছোট'); }
     if (parsed.delivery !== undefined && parsed.delivery !== '') { document.getElementById('pDelFirst').value = parsed.delivery; filled.push('ডেলিভারি'); }
     if (parsed.description) { document.getElementById('pDesc').value = parsed.description; filled.push('বিবরণ'); }
@@ -436,8 +502,8 @@
 
     message.style.color = filled.length ? '#187a42' : '#c0392b';
     message.textContent = filled.length
-      ? '✓ ' + filled.join(', ') + ' — ফর্মে বসানো হয়েছে। এখন ছবি আপলোড করে Submit করুন।'
-      : 'কোনো পরিচিত তথ্য পাওয়া যায়নি। প্রতিটি তথ্য আলাদা লাইনে “নাম: ...” এভাবে লিখুন।';
+      ? '✓ ' + filled.join(', ') + ' — ফর্মে বসানো হয়েছে। এখন ছবি আপলোড করে Submit করুন।'
+      : 'কোনো পরিচিত তথ্য পাওয়া যায়নি। প্রতিটি তথ্য আলাদা লাইনে “নাম: ...” এভাবে লিখুন।';
   }
 
   function resetProductForm() {
@@ -633,7 +699,7 @@
           <td><img class="product-thumb" src="${thumb}"></td>
           <td>${p.name}</td>
           <td>${(typeof p.offerPrice === 'number' && p.offerPrice < p.price) ? '<s style="color:#999">৳' + p.price + '</s> <b style="color:#c0392b">৳' + p.offerPrice + '</b>' : '৳' + p.price}</td>
-          <td><button class="del-btn" style="background:#2d2e83;" onclick="editProduct('${doc.id}')">সম্পাদনা</button></td>
+          <td><button class="del-btn" style="background:#0f6b62;" onclick="editProduct('${doc.id}')">সম্পাদনা</button></td>
           <td><button class="del-btn" onclick="deleteProduct('${doc.id}')">মুছুন</button></td>`;
         body.appendChild(tr);
       });
@@ -654,16 +720,80 @@
     db.collection('orders').doc(id).update({ advanceVerified: checked });
   }
 
+  let orderView = {};
+  let presentOrders = {};
+  let openOrderId = null;
+
+  function orderDetailHtml(id) {
+    const o = ordersCache[id], v = orderView[id];
+    if (!o || !v) return '';
+    const payHtml = o.trxId
+      ? `<div class="oc-pay"><div>${o.paymentMethod === 'advance_full' ? 'পুরো টাকা অগ্রিম' : 'ডেলিভারি চার্জ অগ্রিম'}: <b>৳${escA(o.advancePaid)}</b></div><div>TrxID: <b>${escA(o.trxId)}</b></div><div>নম্বর: ${escA(o.senderNumber)}</div><div>ডেলিভারিতে নেবেন: <b>৳${escA(o.dueOnDelivery)}</b></div><label style="cursor:pointer;display:flex;align-items:center;gap:6px;margin:6px 0 0;"><input type="checkbox" ${o.advanceVerified ? 'checked' : ''} onchange="toggleVerified('${id}', this.checked)"> বিকাশে মিলেছে</label></div>`
+      : (o.paymentMethod === 'cod'
+        ? `<div class="oc-pay"><div>ক্যাশ অন ডেলিভারি</div><div>নেবেন: <b>৳${escA(o.dueOnDelivery)}</b></div></div>`
+        : '');
+    return `
+      <div class="oc-top">
+        <div class="oc-thumbs">${v.thumbsHtml}</div>
+        <div class="oc-items">${v.productDisplay}</div>
+        <span class="badge ${o.status === 'done' ? 'done' : 'pending'}">${o.status === 'done' ? 'সম্পন্ন' : 'পেন্ডিং'}</span>
+      </div>
+      <div class="oc-cust">
+        <div>👤 <b>${escA(o.customerName)}</b></div>
+        <div>📞 ${escA(o.customerPhone)}</div>
+        <div>📍 ${escA(o.customerAddress)}</div>
+      </div>
+      <div class="oc-money">
+        <div><span>পরিমাণ</span><b>${o.quantity}</b></div>
+        <div><span>পণ্য মূল্য</span><b>৳${v.productTotal}</b></div>
+        <div><span>ডেলিভারি</span><b>৳${o.deliveryCharge != null ? o.deliveryCharge : '—'}</b></div>
+        <div class="total"><span>সর্বমোট</span><b>৳${o.totalAmount != null ? o.totalAmount : v.productTotal}</b></div>
+      </div>
+      ${payHtml}
+      <div class="oc-actions">
+        <select onchange="updateStatus('${id}', this.value)">
+          <option value="pending" ${o.status==='pending'?'selected':''}>পেন্ডিং</option>
+          <option value="done" ${o.status==='done'?'selected':''}>সম্পন্ন</option>
+        </select>
+        <button class="del-btn" style="background:#25D366;" onclick="shareOrderToWhatsapp('${id}')">WhatsApp</button>
+        <button class="del-btn" onclick="deleteOrder('${id}')">মুছুন</button>
+      </div>`;
+  }
+
+  function openOrderModal(id) {
+    openOrderId = id;
+    document.getElementById('orderModalBody').innerHTML = orderDetailHtml(id);
+    document.getElementById('orderModalBg').classList.add('open');
+  }
+
+  function closeOrderModal() {
+    openOrderId = null;
+    document.getElementById('orderModalBg').classList.remove('open');
+  }
+
+  function refreshOrderModal() {
+    if (!openOrderId) return;
+    if (!presentOrders[openOrderId]) { closeOrderModal(); return; }
+    const box = document.querySelector('#orderModalBg .om-box');
+    const top = box ? box.scrollTop : 0;
+    document.getElementById('orderModalBody').innerHTML = orderDetailHtml(openOrderId);
+    if (box) box.scrollTop = top;
+  }
+
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeOrderModal(); });
+
   function loadOrders() {
     db.collection('orders').orderBy('createdAt', 'desc').onSnapshot(snap => {
       const body = document.getElementById('ordersBody');
       const empty = document.getElementById('ordersEmpty');
       body.innerHTML = '';
-      if (snap.empty) { empty.style.display = 'block'; return; }
+      presentOrders = {};
+      if (snap.empty) { empty.style.display = 'block'; refreshOrderModal(); return; }
       empty.style.display = 'none';
       snap.forEach(doc => {
         const o = doc.data();
         ordersCache[doc.id] = o;
+        presentOrders[doc.id] = true;
         const items = (o.items && o.items.length) ? o.items : [{ productName: o.productName, quantity: o.quantity, image: o.image }];
         const productDisplay = items.map(it => `${escA(it.productName)}${it.size ? ' <b style="color:#c0392b">[সাইজ: ' + escA(it.size) + ']</b>' : ''} x${it.quantity}`).join('<br>');
         const productTotal = (o.items && o.items.length)
@@ -671,28 +801,21 @@
           : o.price * o.quantity;
         const thumbsHtml = items.filter(it => it.image).map(it =>
           `<img class="product-thumb" src="${it.image}" style="margin-right:2px;">`).join('') || '—';
-        const tr = document.createElement('tr');
+        orderView[doc.id] = { productDisplay, productTotal, thumbsHtml };
+        const tr = document.createElement('div');
+        tr.className = 'order-card sm' + (o.status === 'done' ? ' done' : '');
+        tr.onclick = () => openOrderModal(doc.id);
         tr.innerHTML = `
-          <td>${thumbsHtml}</td>
-          <td>${productDisplay}</td>
-          <td>${escA(o.customerName)}</td>
-          <td>${escA(o.customerPhone)}</td>
-          <td>${escA(o.customerAddress)}</td>
-          <td>${o.quantity}</td>
-          <td>৳${productTotal}</td>
-          <td>৳${o.deliveryCharge != null ? o.deliveryCharge : '—'}</td>
-          <td><strong>৳${o.totalAmount != null ? o.totalAmount : productTotal}</strong></td>
-          <td>${o.trxId ? `<div style="font-size:12px;line-height:1.7;min-width:150px;">${o.paymentMethod === 'advance_full' ? 'পুরো টাকা অগ্রিম' : 'ডেলিভারি চার্জ অগ্রিম'}: <b>৳${escA(o.advancePaid)}</b><br>TrxID: <b>${escA(o.trxId)}</b><br>নম্বর: ${escA(o.senderNumber)}<br>ডেলিভারিতে নেবেন: <b>৳${escA(o.dueOnDelivery)}</b><br><label style="cursor:pointer;"><input type="checkbox" style="width:auto;" ${o.advanceVerified ? 'checked' : ''} onchange="toggleVerified('${doc.id}', this.checked)"> বিকাশে মিলেছে</label></div>` : (o.paymentMethod === 'cod' ? `<div style="font-size:12px;line-height:1.7;">ক্যাশ অন ডেলিভারি<br>নেবেন: <b>৳${escA(o.dueOnDelivery)}</b></div>` : '<span style="color:#999;">—</span>')}</td>
-          <td>
-            <select onchange="updateStatus('${doc.id}', this.value)">
-              <option value="pending" ${o.status==='pending'?'selected':''}>পেন্ডিং</option>
-              <option value="done" ${o.status==='done'?'selected':''}>সম্পন্ন</option>
-            </select>
-          </td>
-          <td><button class="del-btn" style="background:#25D366;" onclick="shareOrderToWhatsapp('${doc.id}')">WhatsApp</button></td>
-          <td><button class="del-btn" onclick="deleteOrder('${doc.id}')">মুছুন</button></td>`;
+          <div class="oc-top">
+            <div class="oc-thumbs">${thumbsHtml}</div>
+            <div class="oc-items">${productDisplay}</div>
+            <span class="badge ${o.status === 'done' ? 'done' : 'pending'}">${o.status === 'done' ? 'সম্পন্ন' : 'পেন্ডিং'}</span>
+          </div>
+          <div class="oc-line"><span>👤 <b>${escA(o.customerName)}</b></span><span class="amt">৳${o.totalAmount != null ? o.totalAmount : productTotal}</span></div>
+          <div class="oc-hint">বিস্তারিত দেখতে চাপুন →</div>`;
         body.appendChild(tr);
       });
+      refreshOrderModal();
     });
   }
 
@@ -965,6 +1088,14 @@ ${itemLines}
 
   loadStats();
   loadPresence();
+
+  function toggleSidebar(force) {
+    var open = (typeof force === 'boolean') ? force : !document.body.classList.contains('sb-open');
+    document.body.classList.toggle('sb-open', open);
+  }
+  document.querySelectorAll('.tab-btn').forEach(function (b) {
+    b.addEventListener('click', function () { toggleSidebar(false); });
+  });
 </script>
 </body>
 </html>
