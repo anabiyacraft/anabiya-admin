@@ -213,7 +213,12 @@
         <label>মূল্য (৳)</label>
         <input type="number" id="pPrice" placeholder="৫০০">
         <label>অফার মূল্য (৳) — ঐচ্ছিক</label>
-        <input type="number" id="pOffer" placeholder="যেমন: ৪৫০ (খালি রাখলে অফার দেখাবে না)">
+        <input type="number" id="pOffer" placeholder="যেমন: ৪৫০ (খালি রাখলে অফার দেখাবে না)" oninput="syncPctFromOffer()">
+        <label>অথবা ডিসকাউন্ট (%) দিন — অফার মূল্য নিজে হিসাব হয়ে বসবে</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="number" id="pDiscPct" placeholder="যেমন: ১০" min="1" max="95" oninput="syncOfferFromPct()" style="max-width:160px;">
+          <span id="pDiscInfo" style="font-size:13px;color:#6b7a8c;"></span>
+        </div>
         <p style="font-size:12px;color:#777;margin-top:4px;">অফার মূল্য দিলে সাইটে আসল মূল্য কেটে দেখাবে ও কাস্টমার অফার মূল্যে কিনবে। অফার মূল্য আসল মূল্যের চেয়ে কম হতে হবে।</p>
         <label>ক্যাটাগরি</label>
         <select id="pCategory">
@@ -259,6 +264,20 @@
         <textarea id="pDesc" rows="3" placeholder="পণ্যের সংক্ষিপ্ত বিবরণ"></textarea>
         <button class="primary" id="addProductBtn" onclick="addProduct()">পণ্য যোগ করুন</button>
         <button class="primary" id="cancelEditBtn" style="background:#aaa;display:none;" onclick="resetProductForm()">বাতিল করুন</button>
+      </div>
+
+      <div class="box">
+        <h2>🏷️ একসাথে ডিসকাউন্ট</h2>
+        <p style="font-size:13px;margin-bottom:6px;line-height:1.7;">সব পণ্যে বা একটা ক্যাটাগরির সব পণ্যে একবারে ডিসকাউন্ট (%) বসান। সাইটে আসল মূল্য কেটে অফার মূল্য ও "% ছাড়" ব্যাজ দেখাবে। আগে থাকা অফার মূল্য নতুন হিসাবে বদলে যাবে।</p>
+        <label>কোন পণ্যে</label>
+        <select id="bulkScope" onfocus="fillBulkScope()" onmousedown="fillBulkScope()"><option value="__all__">সব পণ্য</option></select>
+        <label>ডিসকাউন্ট (%)</label>
+        <input type="number" id="bulkPct" placeholder="যেমন: ১০" min="1" max="95">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <button class="primary" type="button" onclick="applyBulkDiscount()">ডিসকাউন্ট প্রয়োগ করুন</button>
+          <button class="primary" type="button" style="background:#e5484d;" onclick="removeBulkDiscount()">অফার সরিয়ে দিন</button>
+        </div>
+        <div id="bulkMsg" role="status" style="font-size:13px;margin-top:8px;"></div>
       </div>
 
       <div class="box">
@@ -551,10 +570,94 @@
       : 'কোনো পরিচিত তথ্য পাওয়া যায়নি। প্রতিটি তথ্য আলাদা লাইনে “নাম: ...” এভাবে লিখুন।';
   }
 
+  // ---------- ডিসকাউন্ট (%) ----------
+  function bnDigits(v) { return String(v).replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d)); }
+  function syncOfferFromPct() {
+    const price = Number(bnDigits(document.getElementById('pPrice').value));
+    const pct = Number(bnDigits(document.getElementById('pDiscPct').value));
+    const info = document.getElementById('pDiscInfo');
+    if (!pct) { info.textContent = ''; return; }
+    if (!(price > 0)) { info.textContent = 'আগে মূল্য দিন।'; return; }
+    if (pct <= 0 || pct >= 100) { info.textContent = 'ডিসকাউন্ট ১–৯৫% এর মধ্যে দিন।'; return; }
+    const offer = Math.round(price * (1 - pct / 100));
+    document.getElementById('pOffer').value = offer;
+    info.textContent = 'অফার মূল্য: ৳' + offer + ' (ছাড় ৳' + (price - offer) + ')';
+  }
+  function syncPctFromOffer() {
+    const price = Number(document.getElementById('pPrice').value);
+    const offer = Number(document.getElementById('pOffer').value);
+    const info = document.getElementById('pDiscInfo');
+    if (price > 0 && offer > 0 && offer < price) {
+      const pct = Math.round((1 - offer / price) * 100);
+      document.getElementById('pDiscPct').value = pct;
+      info.textContent = 'প্রায় ' + pct + '% ছাড়';
+    } else {
+      document.getElementById('pDiscPct').value = '';
+      info.textContent = '';
+    }
+  }
+  document.addEventListener('input', function (e) {
+    if (e.target && e.target.id === 'pPrice') {
+      if (document.getElementById('pDiscPct').value) syncOfferFromPct(); else syncPctFromOffer();
+    }
+  });
+
+  function fillBulkScope() {
+    const sel = document.getElementById('bulkScope');
+    const cur = sel.value;
+    const cats = Array.from(document.getElementById('pCategory').options).map(o => o.value).filter(Boolean);
+    sel.innerHTML = '<option value="__all__">সব পণ্য</option>' + cats.map(c => '<option value="' + escA(c) + '">' + escA(c) + ' — ক্যাটাগরি</option>').join('');
+    if (Array.from(sel.options).some(o => o.value === cur)) sel.value = cur;
+  }
+
+  function bulkTargets() {
+    const scope = document.getElementById('bulkScope').value;
+    return Object.keys(productsCache).filter(id => scope === '__all__' || productsCache[id].category === scope);
+  }
+
+  async function runBulk(updater, doneText) {
+    const ids = bulkTargets();
+    const msg = document.getElementById('bulkMsg');
+    if (!ids.length) { msg.style.color = '#e5484d'; msg.textContent = 'এই বিভাগে কোনো পণ্য নেই।'; return; }
+    msg.style.color = '#6b7a8c'; msg.textContent = 'কাজ চলছে...';
+    try {
+      for (let i = 0; i < ids.length; i += 400) {
+        const batch = db.batch();
+        ids.slice(i, i + 400).forEach(id => {
+          const upd = updater(productsCache[id]);
+          if (upd) batch.update(db.collection('products').doc(id), upd);
+        });
+        await batch.commit();
+      }
+      msg.style.color = '#187a42'; msg.textContent = '✓ ' + doneText(ids.length);
+    } catch (err) {
+      msg.style.color = '#e5484d'; msg.textContent = 'ত্রুটি: ' + err.message;
+    }
+  }
+
+  function applyBulkDiscount() {
+    const pct = Number(bnDigits(document.getElementById('bulkPct').value));
+    if (!(pct >= 1 && pct <= 95)) { alert('ডিসকাউন্ট ১ থেকে ৯৫ (%) এর মধ্যে দিন।'); return; }
+    const scopeName = document.getElementById('bulkScope').selectedOptions[0].textContent;
+    if (!confirm(scopeName + ' এ ' + pct + '% ডিসকাউন্ট বসাতে চান?')) return;
+    runBulk(p => {
+      const offer = Math.round(Number(p.price) * (1 - pct / 100));
+      return (offer > 0 && offer < Number(p.price)) ? { offerPrice: offer } : null;
+    }, n => n + 'টি পণ্যে ' + pct + '% ডিসকাউন্ট বসেছে।');
+  }
+
+  function removeBulkDiscount() {
+    const scopeName = document.getElementById('bulkScope').selectedOptions[0].textContent;
+    if (!confirm(scopeName + ' এর সব অফার মূল্য সরিয়ে দিতে চান?')) return;
+    runBulk(p => ({ offerPrice: firebase.firestore.FieldValue.delete() }), n => n + 'টি পণ্য থেকে অফার সরানো হয়েছে।');
+  }
+
   function resetProductForm() {
     document.getElementById('pName').value = '';
     document.getElementById('pPrice').value = '';
     document.getElementById('pOffer').value = '';
+    document.getElementById('pDiscPct').value = '';
+    document.getElementById('pDiscInfo').textContent = '';
     document.getElementById('pDesc').value = '';
     document.getElementById('pCategory').value = '';
     document.getElementById('pImageFile').value = '';
@@ -578,6 +681,7 @@
     document.getElementById('pPrice').value = p.price || '';
     document.getElementById('pOffer').value = (typeof p.offerPrice === 'number') ? p.offerPrice : '';
     document.getElementById('pDesc').value = p.description || '';
+    syncPctFromOffer();
     document.getElementById('pCategory').value = p.category || '';
     document.getElementById('pBoro').value = p.boroCount || 0;
     document.getElementById('pChoto').value = p.chotoCount || 0;
